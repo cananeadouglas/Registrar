@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/Login")
 public class Login extends HttpServlet {
@@ -35,7 +36,7 @@ public class Login extends HttpServlet {
 		doGet(request, response);
 
 		try {
-			String login = request.getParameter("user");
+			String login = request.getParameter("user"); // user e password vem da página login.jsp
 			String senha = request.getParameter("password");
 			String dbName = null;
 			String dbPassword = null;
@@ -55,15 +56,15 @@ public class Login extends HttpServlet {
 
 			if (login.equals(dbName) && senha.equals(dbPassword)) {
 				out.println("LOGIN com sucesso");
-				//response.sendRedirect("registrar.jsp");
-			}else {
-				
+
+				HttpSession session = request.getSession();
+				session.setAttribute("login", login); // login vai esta na pagina home para puchar o login
+				response.sendRedirect("home.jsp");
+			} else {
+
 				RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
 				rd.include(request, response);
 			}
-
-			
-			
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
